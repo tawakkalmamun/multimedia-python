@@ -1,26 +1,60 @@
 import pygame
+import tkinter as tk
+from tkinter import filedialog
+from pydub import AudioSegment
+from pydub.playback import play
+
 pygame.init()
 
 # Mengatur tampilan
 screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Simple Game")
-image = pygame.image.load('wan.png')
 
-# Loop utama permainan
+image = pygame.image.load('wan.jpg')
+
+# Loop utama permainan dengan animasi
+x = 0
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-            screen.blit(image, (100, 100))
+    # Memperbarui posisi
+    x += 5
+    if x > 800:
+        x = 0
 
-        sound = pygame.mixer.Sound('example.wav')
-
-        # Memutar suara
-        sound.play()
+    # Menggambar gambar di posisi baru
+    screen.fill((0, 0, 0))
+    screen.blit(image, (x, 100))
 
     # Memperbarui tampilan
     pygame.display.flip()
 
-    
+    # Memuat suara
+    sound = pygame.mixer.Sound('result.wav')
+
+    # Memutar suara
+    sound.play()
+
+pygame.quit()
+
+
+# Membuat jendela utama
+root = tk.Tk()
+root.title("Music Player")
+
+# Mendefinisikan fungsi untuk memutar musik
+def play_music():
+    file_path = filedialog.askopenfilename()
+    if file_path:
+        audio = AudioSegment.from_file(file_path)
+        play(audio)
+
+# Membuat tombol play
+play_button = tk.Button(root, text="Play", command=play_music)
+play_button.pack()
+
+# Menjalankan loop acara Tkinter
+root.mainloop()
